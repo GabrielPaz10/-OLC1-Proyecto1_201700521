@@ -1,0 +1,54 @@
+/*
+    201700521
+*/
+package analizadores;
+import java_cup.runtime.Symbol; 
+
+%%
+%class ALexico
+%public
+%line
+%char
+%cup
+%unicode
+%ignorecase 
+
+%init{
+    yyline=1;
+    yychar=1;
+%init}
+
+ESPACIOS = [ \r\t]+
+COMENTARIO = ("//".*\r\n)|("//".*\r)|("//".*\n)
+COMENTARIOMULTILINEAL = "/*"(.*|\r\n|\r|\n)*"*/"
+DIGITO = [0-9]
+LETRA = [a-zA-ZÑñ]
+IDENTIFICADOR = {LETRA}({LETRA}|"_"|{DIGITO})*
+CARACTER = ([^\t\n\r ])
+SEP = {CARACTER} (","{CARACTER})+
+CADENA = [\"]([^\"\n])*[\"]
+INTERVALO = {CARACTER}"~"{CARACTER}
+%%
+
+{ESPACIOS} {}
+{COMENTARIO} {}
+{COMENTARIOMULTILINEAL} {}
+";" {return new Symbol(sym.PTCOMA,yyline,yychar,yytext());}
+":" {return new Symbol(sym.DOSPUNTOS,yyline,yychar, yytext());} 
+"->" {return new Symbol(sym.ASIGNACION,yyline,yychar, yytext());}
+"{" {return new Symbol(sym.LLAVEAB,yyline,yychar, yytext());} 
+"}" {return new Symbol(sym.LLAVECE,yyline,yychar, yytext());} 
+"%%"     {return new Symbol(sym.DOBPORC,yyline,yychar, yytext());}
+"conj" {return new Symbol(sym.CONJ,yyline,yychar, yytext());} 
+
+"*" {return new Symbol(sym.CKLEENE,yyline,yychar, yytext());} 
+"?" {return new Symbol(sym.CEROUNA,yyline,yychar, yytext());} 
+"+" {return new Symbol(sym.CPOS,yyline,yychar, yytext());} 
+"|" {return new Symbol(sym.ALTERNANCIA,yyline,yychar, yytext());} 
+"." {return new Symbol(sym.CONCATENACION,yyline,yychar, yytext());} 
+{CADENA} {return new Symbol(sym.CADENA,yyline,yychar, yytext());}
+{IDENTIFICADOR} {return new Symbol(sym.ID,yyline,yychar,yytext());}
+{INTERVALO} {return new Symbol(sym.INTERVALO,yyline,yychar,yytext());}
+{SEP} {return new Symbol(sym.SEP,yyline,yychar,yytext());}
+\n {yychar=1;}
+. {System.out.println("Caracter: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar+" no forma parte del lenguaje"); }

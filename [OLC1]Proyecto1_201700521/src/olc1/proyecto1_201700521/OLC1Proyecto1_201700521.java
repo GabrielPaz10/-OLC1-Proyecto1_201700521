@@ -5,6 +5,7 @@
  */
 package olc1.proyecto1_201700521;
 
+
 /**
  *
  * @author GabrielPaz
@@ -16,6 +17,8 @@ public class OLC1Proyecto1_201700521 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Principal p= new Principal();
+        p.show();
     }
     
 }
