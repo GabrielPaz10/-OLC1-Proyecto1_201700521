@@ -27,5 +27,59 @@ terminal String SEP;
 terminal String INTERVALO;
 terminal String CADENA;
 terminal String IDENTIFICADOR;
+terminal String RN,RCS,RCD;
 
 non terminal inicio;
+non terminal ArrayList entrada;
+non terminal ArrayList conjuntos;
+non terminal conjunto;
+non terminal tipos;
+non terminal ArrayList expresiones;
+non terminal expresion;
+non terminal e;
+non terminal ArrayList evaluaciones;
+non terminal evaluacion; 
+
+start with inicio;
+
+inicio::= entrada:a
+{:
+    parser.reconocido=a;
+:}
+;
+entrada ::= LLAVEAB conjuntos:a expresiones:b DOBPOR DOBPOR evaluaciones:c LLAVECE  {:RESULT=new ArrayList<>(); RESULT.add(a); RESULT.add(b); RESULT.add(c);:}
+;
+conjuntos ::= 
+   conjuntos:a conjunto:b       {:RESULT=a; RESULT.add(b);:}
+ | conjunto:a                   {:RESULT=new ArrayList(); RESULT.add(a);:}
+; 
+expresiones ::= 
+   expresiones:a expresion:b    {:RESULT=a; RESULT.add(b);:}
+ | expresion:a                  {:RESULT=new ArrayList(); RESULT.add(a);:}
+;
+evaluaciones ::= 
+   evaluaciones:a evaluacion:b  {:RESULT=a; RESULT.add(b);:}
+ | evaluacion:a                 {:RESULT=new ArrayList(); RESULT.add(a);:}
+;
+conjunto ::= CONJ DOSPUNTOS IDENTIFICADOR:a ASIGNACION tipos:b PTCOMA {:RESULT = a + " = " + b;:}
+;
+tipos ::= INTERVALO:a   {:RESULT = a;:}
+    | SEP:a       {:RESULT = a;:}
+;
+expresion ::= IDENTIFICADOR:a ASIGNACION e:e PTCOMA    {:RESULT = a + " = " + e;:}
+;
+
+e ::= 
+    CONCATENACION e:e1 e:e2           {:RESULT = "AND(" + e1 + ", " + e2 + ")";:}
+    | ALTERNANCIA e:e1 e:e2          {:RESULT = "OR(" + e1 + ", " + e2 + ")";:}
+    | CKLEENE e:e            {:RESULT = "*(" + e + ")";:}
+    | CPOS e:e              {:RESULT = "+(" + e + ")";:}
+    | CEROUNA e:e     {:RESULT = "?(" + e + ")";:}
+    | CADENA:a              {:RESULT = a;:}
+    | LLAVEAB IDENTIFICADOR:a LLAVECE    {:RESULT = "conj(" + a + ")";:}
+    | RN:a                  {:RESULT = a;:}
+    | RCS:a                 {:RESULT = a;:}
+    | RCD:a                 {:RESULT = a;:}
+;
+evaluacion ::= IDENTIFICADOR:a DOSPUNTOS CADENA:b PTCOMA {:RESULT = "[" + a + "," + b + "]";:}
+;

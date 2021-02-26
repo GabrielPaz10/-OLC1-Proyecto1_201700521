@@ -50,5 +50,8 @@ INTERVALO = {CARACTER}"~"{CARACTER}
 {IDENTIFICADOR} {return new Symbol(sym.ID,yyline,yychar,yytext());}
 {INTERVALO} {return new Symbol(sym.INTERVALO,yyline,yychar,yytext());}
 {SEP} {return new Symbol(sym.SEP,yyline,yychar,yytext());}
+"//n" {return new Symbol(sym.RN,yyline,yychar, yytext());} 
+"///'" {return new Symbol(sym.RCS,yyline,yychar, yytext());} 
+///" {return new Symbol(sym.RCD,yyline,yychar, yytext());} 
 \n {yychar=1;}
 . {System.out.println("Caracter: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar+" no forma parte del lenguaje"); }
