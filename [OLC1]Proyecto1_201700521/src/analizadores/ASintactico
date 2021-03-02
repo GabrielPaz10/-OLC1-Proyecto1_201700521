@@ -1,33 +1,39 @@
-package analizadores
+package analizadores;
 import java_cup.runtime.*;
 import java.util.ArrayList;
 
-parser code
+parser code 
 {:
-    public ArrayList<ArrayList> reconocido;
-    /**metodo para error recuperable
-    **/
+
+    public ArrayList<ArrayList> info;
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
     public void syntax_error(Symbol s){ 
         System.out.println("Error Sintáctico en la Línea " + (s.left) +
         " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
         System.out.println(s.sym);
     } 
-    /** metodo para un error irrecuperable
-    **/
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
         System.out.println("Error síntactico irrecuperable en la Línea " + 
         (s.left)+ " Columna "+s.right+". Componente " + s.value + 
         " no reconocido."); 
-    }
-}
+    }  
+:} 
+
 terminal String CONJ;
-terminal String CONCATENACION, ALTERNANCIA, CKLEENE,CPOS, CEROUNA;
-terminal String PTCOMA, DOSPUNTOS,ASIGNACION, LLAVEAB, LLAVECE, DOBPORC
-terminal String SEP;
-terminal String INTERVALO;
+terminal String PTCOMA,MENOS,MAYOR,LISTA,LLAVEIZ,LLAVEDE,DOBPOR,DOSPUNTOS;
+terminal String CONCAT,ALTERN,KLEENE,CPOS,UNOMAS;
+terminal String SALTO,CS,CD;
+terminal String ID;
+terminal String INTERV;
 terminal String CADENA;
-terminal String IDENTIFICADOR;
-terminal String RN,RCS,RCD;
 
 non terminal inicio;
 non terminal ArrayList entrada;
@@ -38,48 +44,60 @@ non terminal ArrayList expresiones;
 non terminal expresion;
 non terminal e;
 non terminal ArrayList evaluaciones;
-non terminal evaluacion; 
+non terminal evaluacion;
 
-start with inicio;
 
-inicio::= entrada:a
+
+start with inicio; 
+
+inicio::= entrada:a 
 {:
-    parser.reconocido=a;
+    //se guarda la info, que es la lista principal de instrucciones en la variable
+    //info que se definió dentro del parser
+    parser.info=a;
 :}
 ;
-entrada ::= LLAVEAB conjuntos:a expresiones:b DOBPOR DOBPOR evaluaciones:c LLAVECE  {:RESULT=new ArrayList<>(); RESULT.add(a); RESULT.add(b); RESULT.add(c);:}
-;
+
+entrada ::= LLAVEIZ conjuntos:a expresiones:b DOBPOR DOBPOR evaluaciones:c LLAVEDE  {:RESULT=new ArrayList<>(); RESULT.add(a); RESULT.add(b); RESULT.add(c);:}
+; 
+
 conjuntos ::= 
    conjuntos:a conjunto:b       {:RESULT=a; RESULT.add(b);:}
  | conjunto:a                   {:RESULT=new ArrayList(); RESULT.add(a);:}
 ; 
+
 expresiones ::= 
    expresiones:a expresion:b    {:RESULT=a; RESULT.add(b);:}
  | expresion:a                  {:RESULT=new ArrayList(); RESULT.add(a);:}
-;
+; 
+
 evaluaciones ::= 
    evaluaciones:a evaluacion:b  {:RESULT=a; RESULT.add(b);:}
  | evaluacion:a                 {:RESULT=new ArrayList(); RESULT.add(a);:}
+; 
+
+conjunto ::= CONJ DOSPUNTOS ID:a MENOS MAYOR tipos:b PTCOMA {:RESULT = a + " = " + b;:}
 ;
-conjunto ::= CONJ DOSPUNTOS IDENTIFICADOR:a ASIGNACION tipos:b PTCOMA {:RESULT = a + " = " + b;:}
+
+tipos ::= INTERV:a   {:RESULT = a;:}
+    | LISTA:a       {:RESULT = a;:}
 ;
-tipos ::= INTERVALO:a   {:RESULT = a;:}
-    | SEP:a       {:RESULT = a;:}
-;
-expresion ::= IDENTIFICADOR:a ASIGNACION e:e PTCOMA    {:RESULT = a + " = " + e;:}
+
+expresion ::= ID:a MENOS MAYOR e:e PTCOMA    {:RESULT = a + " = " + e;:}
 ;
 
 e ::= 
-    CONCATENACION e:e1 e:e2           {:RESULT = "AND(" + e1 + ", " + e2 + ")";:}
-    | ALTERNANCIA e:e1 e:e2          {:RESULT = "OR(" + e1 + ", " + e2 + ")";:}
-    | CKLEENE e:e            {:RESULT = "*(" + e + ")";:}
+    CONCAT e:e1 e:e2           {:RESULT = "AND(" + e1 + ", " + e2 + ")";:}
+    | ALTERN e:e1 e:e2          {:RESULT = "OR(" + e1 + ", " + e2 + ")";:}
+    | KLEENE e:e            {:RESULT = "*(" + e + ")";:}
     | CPOS e:e              {:RESULT = "+(" + e + ")";:}
-    | CEROUNA e:e     {:RESULT = "?(" + e + ")";:}
+    | UNOMAS e:e     {:RESULT = "?(" + e + ")";:}
     | CADENA:a              {:RESULT = a;:}
-    | LLAVEAB IDENTIFICADOR:a LLAVECE    {:RESULT = "conj(" + a + ")";:}
-    | RN:a                  {:RESULT = a;:}
-    | RCS:a                 {:RESULT = a;:}
-    | RCD:a                 {:RESULT = a;:}
+    | LLAVEIZ ID:a LLAVEDE    {:RESULT = "conj(" + a + ")";:}
+    | SALTO:a                  {:RESULT = a;:}
+    | CS:a                 {:RESULT = a;:}
+    | CD:a                 {:RESULT = a;:}
 ;
-evaluacion ::= IDENTIFICADOR:a DOSPUNTOS CADENA:b PTCOMA {:RESULT = "[" + a + "," + b + "]";:}
+
+evaluacion ::= ID:a DOSPUNTOS CADENA:b PTCOMA {:RESULT = "[" + a + "," + b + "]";:}
 ;

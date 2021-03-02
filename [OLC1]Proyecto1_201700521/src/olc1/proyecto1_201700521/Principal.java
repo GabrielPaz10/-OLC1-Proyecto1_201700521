@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -271,6 +272,23 @@ public class Principal extends javax.swing.JFrame {
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here:
         //vamos a analizar xd
+        if (Ruta.equals("")) {
+            JOptionPane.showConfirmDialog(rootPane,"No se ha seleccionado archivo");
+        }else{
+            analizadores.ASintactico parse;
+            try {
+                parse = new analizadores.ASintactico(new analizadores.ALexico(new BufferedReader(new FileReader(Ruta))));
+                parse.parse(); 
+                for(ArrayList dato: parse.info){
+                    for(Object s: dato){
+                        System.out.println(s);
+                    }
+                }
+            } catch (Exception ex) {
+                System.out.println("Error fatal en compilación de entrada.");
+                System.out.println("Causa: "+ex.getCause());
+            } 
+        }
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     /**
