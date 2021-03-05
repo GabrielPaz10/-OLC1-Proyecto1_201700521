@@ -279,9 +279,14 @@ public class Principal extends javax.swing.JFrame {
             try {
                 parse = new analizadores.ASintactico(new analizadores.ALexico(new BufferedReader(new FileReader(Ruta))));
                 parse.parse(); 
-                for(ArrayList dato: parse.info){
+                Manejador.obtenerInstancia().setParse(parse);
+                for(ArrayList dato: Manejador.obtenerInstancia().getParse().info){
+                    System.out.println(dato.getClass());
+                    System.out.println(dato.size());
                     for(Object s: dato){
+                        //System.out.println(s.getClass());
                         System.out.println(s);
+                        
                     }
                 }
             } catch (Exception ex) {

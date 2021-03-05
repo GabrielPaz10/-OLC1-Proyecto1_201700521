@@ -1,6 +1,7 @@
 package analizadores;
 import java_cup.runtime.*;
 import java.util.ArrayList;
+import olc1.proyecto1_201700521.Almacenador;
 
 parser code 
 {:
@@ -76,28 +77,28 @@ evaluaciones ::=
  | evaluacion:a                 {:RESULT=new ArrayList(); RESULT.add(a);:}
 ; 
 
-conjunto ::= CONJ DOSPUNTOS ID:a MENOS MAYOR tipos:b PTCOMA {:RESULT = a + " = " + b;:}
+conjunto ::= CONJ DOSPUNTOS ID:a MENOS MAYOR tipos:b PTCOMA {:RESULT = new Almacenador(a,b);:}
 ;
 
 tipos ::= INTERV:a   {:RESULT = a;:}
     | LISTA:a       {:RESULT = a;:}
 ;
 
-expresion ::= ID:a MENOS MAYOR e:e PTCOMA    {:RESULT = a + " = " + e;:}
+expresion ::= ID:a MENOS MAYOR e:e PTCOMA    {:RESULT = new Almacenador(a,e);:}
 ;
 
 e ::= 
-    CONCAT e:e1 e:e2           {:RESULT = "AND(" + e1 + ", " + e2 + ")";:}
-    | ALTERN e:e1 e:e2          {:RESULT = "OR(" + e1 + ", " + e2 + ")";:}
-    | KLEENE e:e            {:RESULT = "*(" + e + ")";:}
-    | CPOS e:e              {:RESULT = "+(" + e + ")";:}
-    | UNOMAS e:e     {:RESULT = "?(" + e + ")";:}
-    | CADENA:a              {:RESULT = a;:}
-    | LLAVEIZ ID:a LLAVEDE    {:RESULT = "conj(" + a + ")";:}
-    | SALTO:a                  {:RESULT = a;:}
-    | CS:a                 {:RESULT = a;:}
-    | CD:a                 {:RESULT = a;:}
+    CONCAT e:e1 e:e2           {:RESULT = ".," + e1 + e2 ;:}
+    | ALTERN e:e1 e:e2          {:RESULT = "|," + e1 + e2 ;:}
+    | KLEENE e:e            {:RESULT = "*," + e ;:}
+    | CPOS e:e              {:RESULT = "+," + e ;:}
+    | UNOMAS e:e     {:RESULT = "?," + e ;:}
+    | CADENA:a              {:RESULT = a+",";:}
+    | LLAVEIZ ID:a LLAVEDE    {:RESULT = "{"+ a+"}," ;:}
+    | SALTO:a                  {:RESULT = a+",";:}
+    | CS:a                 {:RESULT = a+",";:}
+    | CD:a                 {:RESULT = a+",";:}
 ;
 
-evaluacion ::= ID:a DOSPUNTOS CADENA:b PTCOMA {:RESULT = "[" + a + "," + b + "]";:}
+evaluacion ::= ID:a DOSPUNTOS CADENA:b PTCOMA {:RESULT = new Almacenador(a,b);:}
 ;

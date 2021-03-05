@@ -26,7 +26,7 @@ DIGITO = [0-9]
 IDENTIFICADOR = {LETRA}({LETRA}|{DIGITO}|"_")* 
 CARACTER = ([^\t\n\r ])
 INTERV = {CARACTER}"~"{CARACTER}
-LISTA = {CARACTER} (","{CARACTER})*
+LISTA = {CARACTER}(({BLANCOS})*","({BLANCOS})*{CARACTER})*
 CADENA = [\"]([^\"\n])*[\"]
 
 %%
