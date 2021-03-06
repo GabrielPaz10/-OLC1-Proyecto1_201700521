@@ -46,6 +46,10 @@ public class Arbol {
         if (raiz.izq!=null) {
             bandera= insertar(bandera, raiz.izq,nuevo);
         }
+        if (raiz.dere!=null) {
+            bandera= insertar(bandera,raiz.dere,nuevo);
+            
+        }
         if (!bandera) {
             if (raiz.identificador.equals("*")||raiz.identificador.equals("?")||raiz.identificador.equals("+")||raiz.identificador.equals("|")||raiz.identificador.equals(".")) {
                 if (raiz.izq==null&&raiz.dere==null) {
@@ -62,10 +66,7 @@ public class Arbol {
                 }
             }
         }
-        if (raiz.dere!=null) {
-            bandera= insertar(bandera,raiz.dere,nuevo);
-            
-        }
+        
         return bandera;
     }
     public void anulables(NodoArbol raiz){
@@ -140,9 +141,12 @@ public class Arbol {
                 for (int i = 0; i < raiz.izq.primeros.size(); i++) {
                     raiz.primeros.add(raiz.izq.primeros.get(i));
                 }
-                for (int i = 0; i < raiz.dere.primeros.size(); i++) {
-                    raiz.primeros.add(raiz.dere.primeros.get(i));
+                if (raiz.dere!=null) {
+                    for (int i = 0; i < raiz.dere.primeros.size(); i++) {
+                        raiz.primeros.add(raiz.dere.primeros.get(i));
+                    }
                 }
+                
             }else{
                 for (int i = 0; i < raiz.izq.primeros.size(); i++) {
                     raiz.primeros.add(raiz.izq.primeros.get(i));
@@ -179,9 +183,12 @@ public class Arbol {
                 for (int i = 0; i < raiz.izq.ultimos.size(); i++) {
                     raiz.ultimos.add(raiz.izq.ultimos.get(i));
                 }
-                for (int i = 0; i < raiz.dere.ultimos.size(); i++) {
-                    raiz.ultimos.add(raiz.dere.ultimos.get(i));
+                if (raiz.dere!=null) {
+                    for (int i = 0; i < raiz.dere.ultimos.size(); i++) {
+                        raiz.ultimos.add(raiz.dere.ultimos.get(i));
+                    }
                 }
+                
             }else{
                 for (int i = 0; i < raiz.izq.ultimos.size(); i++) {
                     raiz.ultimos.add(raiz.izq.ultimos.get(i));
@@ -230,9 +237,9 @@ public class Arbol {
             insertar(false,this.raiz,nuevo);
         }
         anulables(this.raiz);
-        //primeros(this.raiz);
+        primeros(this.raiz);
         cantidadNodos=1;
-        //ultimos(this.raiz);
+        ultimos(this.raiz);
         //listaSiguientes(this.raiz);
         //Collections.sort(nodoHijos);
         //tablaEstados();
