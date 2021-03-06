@@ -6,6 +6,7 @@
 package olc1.proyecto1_201700521;
 
 import analizadores.ASintactico;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +16,47 @@ import java.util.ArrayList;
 public class Manejador {
     private static Manejador instancia;
     private analizadores.ASintactico parse;
+    private ArrayList<Almacenador> expresiones;
+    private ArrayList<Almacenador> evaluaciones;
+    private ArrayList<Almacenador> conjuntos;
+
+    public ArrayList<Almacenador> getExpresiones() {
+        return expresiones;
+    }
+
+    public void setExpresiones(ArrayList<Almacenador> expresiones) {
+        this.expresiones = expresiones;
+    }
+
+    public ArrayList<Almacenador> getEvaluaciones() {
+        return evaluaciones;
+    }
+
+    public void setEvaluaciones(ArrayList<Almacenador> evaluaciones) {
+        this.evaluaciones = evaluaciones;
+    }
+
+    public ArrayList<Almacenador> getConjuntos() {
+        return conjuntos;
+    }
+
+    public void setConjuntos(ArrayList<Almacenador> conjuntos) {
+        this.conjuntos = conjuntos;
+    }
     private ArrayList<Error> errores;
+    private String rutaArbol;
+    private String rutaAFD;
+    private String rutaAFN;
+    private String rutaSiguientes;
+    private String rutaTransiciones;
+    private String rutaErrores;
+    private String rutaSalidas;
+    private String dotPath;
+
+    public String getDotPath() {
+        return dotPath;
+    }
+    
 
     public ArrayList<Error> getErrores() {
         return errores;
@@ -43,19 +84,59 @@ public class Manejador {
         return instancia;
     }
 
-    public Manejador() {
-        errores= new ArrayList();
+    public String getRutaArbol() {
+        return rutaArbol;
     }
-    public void proceso(){
-        ArrayList<Almacenador> expresiones = parse.info.get(1);
-        for (Almacenador siu:expresiones) {
-            String exp= (String)siu.valor;
+
+    public String getRutaAFD() {
+        return rutaAFD;
+    }
+
+    public String getRutaAFN() {
+        return rutaAFN;
+    }
+
+    public String getRutaSiguientes() {
+        return rutaSiguientes;
+    }
+
+    public String getRutaTransiciones() {
+        return rutaTransiciones;
+    }
+
+    public String getRutaErrores() {
+        return rutaErrores;
+    }
+
+    public String getRutaSalidas() {
+        return rutaSalidas;
+    }
+
+    
+    public Manejador() {
+        errores= new ArrayList<>();
+        rutaArbol="\\ARBOLES_201700521\\";
+        rutaAFD="\\AFD_201700521\\";
+        rutaAFN="\\AFND_201700521\\";
+        rutaSiguientes="\\SIGUIENTES_201700521\\";
+        rutaTransiciones="\\TRANSICIONES_201700521\\";
+        rutaErrores="\\ERRORES_201700521\\";
+        rutaSalidas="\\SALIDAS_201700521\\";
+        expresiones= new ArrayList<>();
+        conjuntos= new ArrayList<>();
+        evaluaciones= new ArrayList<>();
+        dotPath="D:\\Graphviz\\bin\\dot.exe";
+    }
+    public void proceso() throws IOException{
+        
+        for (Almacenador expresion:expresiones) {
+            String exp= (String)expresion.valor;
             String[] datos=exp.split(",");
             Arbol nuevo= new Arbol();
-            for (int i = 0; i < datos.length; i++) {
-                nuevo.insertarToken(datos[i]);
+            for (String dato : datos) {
+                nuevo.insertarToken(dato);
             }
-            nuevo.analizando();
+            nuevo.analizando( expresion.nombre);
         }
     }
 }

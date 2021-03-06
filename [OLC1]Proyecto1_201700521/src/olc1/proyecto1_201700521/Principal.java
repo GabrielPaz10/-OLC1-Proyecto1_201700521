@@ -277,21 +277,34 @@ public class Principal extends javax.swing.JFrame {
             try {
                 parse = new analizadores.ASintactico(new analizadores.ALexico(new BufferedReader(new FileReader(Ruta))));
                 parse.parse(); 
-                Manejador.obtenerInstancia().setParse(parse);
-                for(ArrayList dato: Manejador.obtenerInstancia().getParse().info){
+                Manejador.obtenerInstancia().setConjuntos(parse.info.get(0));
+                Manejador.obtenerInstancia().setExpresiones(parse.info.get(1));
+                Manejador.obtenerInstancia().setEvaluaciones(parse.info.get(2));
+                
+                System.out.println("si funciona");
+                //
+                System.out.println("si funciona");
+                /*for(ArrayList dato: Manejador.obtenerInstancia().getParse().info){
                     System.out.println(dato.getClass());
-                    System.out.println(dato.size());
-                    for(Object s: dato){
+                    System.out.println(dato.size());*/
+                    for(Almacenador s: Manejador.obtenerInstancia().getExpresiones()){
                         //System.out.println(s.getClass());
-                        System.out.println(s);
-                        
+                        //Almacenador nue= (Almacenador)s;
+                        System.out.println(s.toString());
                     }
-                }
+                    //Manejador.obtenerInstancia().proceso();
+                    /*Manejador.obtenerInstancia().proceso();
+                }*/
                 
             } catch (Exception ex) {
                 System.out.println("Error fatal en compilación de entrada.");
                 System.out.println("Causa: "+ex.getCause());
-            } 
+            }
+            try {
+                Manejador.obtenerInstancia().proceso();
+            } catch (IOException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnAnalizarActionPerformed
 

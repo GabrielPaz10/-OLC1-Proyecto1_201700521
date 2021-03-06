@@ -5,6 +5,11 @@
  */
 package olc1.proyecto1_201700521;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -216,7 +221,7 @@ public class Arbol {
     public void insertarToken(String dato){
         tokens.add(dato);
     }
-    public void analizando(){
+    public void analizando(String nombre) {
         this.raiz=new NodoArbol(0,".");
         this.raiz.dere=new NodoArbol(1,"#");
         this.raiz.izq=new NodoArbol(2,tokens.get(0));
@@ -225,23 +230,80 @@ public class Arbol {
             insertar(false,this.raiz,nuevo);
         }
         anulables(this.raiz);
-        primeros(this.raiz);
+        //primeros(this.raiz);
         cantidadNodos=1;
-        ultimos(this.raiz);
-        listaSiguientes(this.raiz);
-        Collections.sort(nodoHijos);
-        tablaEstados();
+        //ultimos(this.raiz);
+        //listaSiguientes(this.raiz);
+        //Collections.sort(nodoHijos);
+        //tablaEstados();
         cantidadNodos=1;
-        generarReportes();
+        generarReportes(nombre);
         
     }
-    public void generarReportes(){
+    public void generarReportes(String nombre) {
+        graficarArbol(nombre);
         
+    }
+    public void graficarArbol(String nombre) {
+        String ruta = nombre+".dot";
+        File archivo = new File(ruta);
+        BufferedWriter Lect=null;
+        FileWriter fw;
+        PrintWriter pw;
+        try{
+            fw=new FileWriter(ruta);
+            pw= new PrintWriter(fw);
+            Lect = new BufferedWriter(new FileWriter(archivo));
+            this.cadenaImprimir = "digraph ARBOL { " + '\n';
+            this.cadenaImprimir+="graph [label=\"Arbol: "+nombre+"\", labelloc=t, fontsize=20]; ";
+            this.cadenaImprimir += "rankdir=TB" + '\n';
+            this.cadenaImprimir += "node[shape=record,style=filled] " + '\n';
+            generarArbolD(raiz);
+            this.cadenaImprimir += '\n' + "}";
+        
+        
+            Lect.write(this.cadenaImprimir);
+            //Lect.close();
+            try {
+                String fileInputPath=ruta;
+                String fileOutPath=nombre+".png";
+                String tParam="-Tpng";
+                String toParam="-o";
+                
+                String[] cmd=new String[5];
+                cmd[0]=Manejador.obtenerInstancia().getDotPath();
+                cmd[1]=tParam;
+                cmd[2]=fileInputPath;
+                cmd[3]=toParam;
+                cmd[4]=fileOutPath;
+                //String cm = "dot "+tParam+" "+fileInputPath+" "+toParam+" "+fileOutPath;
+                Runtime rt = Runtime.getRuntime();
+                rt.exec(cmd);
+            
+                //Runtime.getRuntime().exec(cm);//
+                //String imagen=nombre+".png";
+                //String cmd = "dot -Tpng "+ruta+" -o "+imagen; 
+                //Runtime.getRuntime().exec(cmd); 
+            
+            }catch (Exception ioe) {
+                //en caso de error
+                System.out.println (ioe);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try {
+                if (null != Lect) {
+                    Lect.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
     }
     public void generarArbolD(NodoArbol raiz){
         String Titulo;
         String Escape="";
-        //validaciones para quitar errores de graphviz
         char Caracter=raiz.identificador.charAt(0);
         if(Caracter == (char) 34){
             Titulo="Cadena";
@@ -264,29 +326,29 @@ public class Arbol {
                 break;
             }
         }
-        
-        //Fin de errores Graphviz
-        //concatenacion de primeros
-        String L_Primeros="";
-        L_Primeros+=raiz.primeros.get(0);
-        for(int i=1;i<raiz.primeros.size();i++){
-            L_Primeros+=" ,"+raiz.primeros.get(i);
-            
-        }
-        String L_Ultimos="";
-        L_Ultimos+=raiz.ultimos.get(0);
-        for(int i=1;i<raiz.ultimos.size();i++){
-            L_Ultimos+=" ,"+raiz.ultimos.get(i);
-            
-        }
-        //fin de concatenacion de primeros 
-        this.cadenaImprimir += "\"" + raiz.numero  + "\"" + "[label =\"<C0>|P: "+L_Primeros+"|{<C1> Anulable:"+raiz.anulable+"|" +Titulo+": "+Escape+ tem2 + "}|U: "+L_Ultimos+"|<C2>\"]; \n";
 
+        String L_Primeros="";
+        if (raiz.primeros.size()>0) {
+            L_Primeros+=raiz.primeros.get(0);
+            for(int i=1;i<raiz.primeros.size();i++){
+                L_Primeros+=" ,"+raiz.primeros.get(i);
+            }
+        }
+        
+        String L_Ultimos="";
+        if (raiz.ultimos.size()>0) {
+            L_Ultimos+=raiz.ultimos.get(0);
+            for(int i=1;i<raiz.ultimos.size();i++){
+                L_Ultimos+=" ,"+raiz.ultimos.get(i);   
+            }
+        }
+        
+        
+        this.cadenaImprimir += "\"" + raiz.numero  + "\"" + "[label =\"<C0>|P: "+L_Primeros+"|{<C1> Anulable:"+raiz.anulable+"|" +Titulo+": "+Escape+ tem2 + "}|U: "+L_Ultimos+"|<C2>\"]; \n";
         if(raiz.izq !=null ){
             this.generarArbolD(raiz.izq);
             this.cadenaImprimir += "\""+ raiz.numero  +"\":C0->"+"\""+raiz.izq.numero+"\"; \n";
-        }
-        
+        }        
         if(raiz.dere !=null ){
             this.generarArbolD(raiz.dere);
             this.cadenaImprimir += "\""+ raiz.numero  +"\":C2->"+"\""+raiz.dere.numero+"\"; \n";
