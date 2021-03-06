@@ -15,7 +15,17 @@ import java.util.ArrayList;
 public class Manejador {
     private static Manejador instancia;
     private analizadores.ASintactico parse;
+    private ArrayList<Error> errores;
 
+    public ArrayList<Error> getErrores() {
+        return errores;
+    }
+
+    public void setErrores(ArrayList<Error> errores) {
+        this.errores = errores;
+    }
+
+    
     public ASintactico getParse() {
         return parse;
     }
@@ -34,6 +44,7 @@ public class Manejador {
     }
 
     public Manejador() {
+        errores= new ArrayList();
     }
     public void proceso(){
         ArrayList<Almacenador> expresiones = parse.info.get(1);
@@ -44,6 +55,7 @@ public class Manejador {
             for (int i = 0; i < datos.length; i++) {
                 nuevo.insertarToken(datos[i]);
             }
+            nuevo.analizando();
         }
     }
 }

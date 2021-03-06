@@ -224,8 +224,6 @@ public class Principal extends javax.swing.JFrame {
                     PrintWriter printwriter = new PrintWriter(JFile);
                     printwriter.print(txtEntrada.getText());
                     printwriter.close();
-
-
                     Ruta=JFile.getAbsolutePath();
                     System.out.print(Ruta);
                     JOptionPane.showMessageDialog(null, "Se ha guardado Correctamente");
@@ -289,6 +287,7 @@ public class Principal extends javax.swing.JFrame {
                         
                     }
                 }
+                
             } catch (Exception ex) {
                 System.out.println("Error fatal en compilación de entrada.");
                 System.out.println("Causa: "+ex.getCause());
