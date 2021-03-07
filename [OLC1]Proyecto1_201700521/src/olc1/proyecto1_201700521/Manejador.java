@@ -19,6 +19,16 @@ public class Manejador {
     private ArrayList<Almacenador> expresiones;
     private ArrayList<Almacenador> evaluaciones;
     private ArrayList<Almacenador> conjuntos;
+    private ArrayList<Validacion> validacionesJson;
+
+    public ArrayList<Validacion> getValidacionesJson() {
+        return validacionesJson;
+    }
+
+    public void setValidacionesJson(ArrayList<Validacion> validacionesJson) {
+        this.validacionesJson = validacionesJson;
+    }
+    
 
     public ArrayList<Almacenador> getExpresiones() {
         return expresiones;
@@ -126,6 +136,7 @@ public class Manejador {
         conjuntos= new ArrayList<>();
         evaluaciones= new ArrayList<>();
         dotPath="D:\\Graphviz\\bin\\dot.exe";
+        validacionesJson= new ArrayList<>();
     }
     public void procesoArbol() throws IOException{
         

@@ -97,7 +97,7 @@ public class Arbol {
                 }
             }
             if (raiz.identificador.equals(".")) {
-                if (raiz.izq.anulable||raiz.dere.anulable) {
+                if (raiz.izq.anulable&&raiz.dere.anulable) {
                     raiz.anulable=true;
                 }else{
                     raiz.anulable=false;
@@ -301,8 +301,8 @@ public class Arbol {
     }
     public void AFDDot(){
         cadenaImprimir+="rankdir=LR;";
-        cadenaImprimir+="edge [color=blue];";
-        cadenaImprimir+="node [color = mediumseagreen];";
+        cadenaImprimir+="edge [color=black];";
+        cadenaImprimir+="node [color = orange];";
         for(int i=0;i<transiciones.size();i++){
             cadenaImprimir+="\""+transiciones.get(i).getNombreEstado()+"\""+"[ label="+transiciones.get(i).getNombreEstado()+"]"+'\n';
         }
@@ -402,7 +402,7 @@ public class Arbol {
             this.cadenaImprimir = "digraph ARBOL { " + '\n';
             this.cadenaImprimir+="graph [label=\"Arbol: "+nombre+"\", labelloc=t, fontsize=20]; ";
             this.cadenaImprimir += "rankdir=TB" + '\n';
-            this.cadenaImprimir += "node[shape=record,style=filled] " + '\n';
+            this.cadenaImprimir += "node[shape=record,style=filled,color=\"0.619 0.714 0.714\"] " + '\n';
             generarArbolD(raiz);
             this.cadenaImprimir += '\n' + "}";
         
