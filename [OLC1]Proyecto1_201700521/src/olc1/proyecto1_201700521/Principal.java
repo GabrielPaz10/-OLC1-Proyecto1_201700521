@@ -157,7 +157,7 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
-    public String Ruta;
+    public String Ruta="";
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
         // Eventos de Archivo "ABRIR"
@@ -271,7 +271,7 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         //vamos a analizar xd
         if (Ruta.equals("")) {
-            JOptionPane.showConfirmDialog(rootPane,"No se ha seleccionado archivo");
+            JOptionPane.showMessageDialog(rootPane,"No se ha seleccionado archivo");
         }else{
             analizadores.ASintactico parse;
             try {

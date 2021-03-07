@@ -179,19 +179,19 @@ public class Arbol {
             }
         }
         if (raiz.identificador.equals(".")) {
-            if (raiz.izq.anulable) {
+            if (raiz.dere.anulable) {
                 for (int i = 0; i < raiz.izq.ultimos.size(); i++) {
                     raiz.ultimos.add(raiz.izq.ultimos.get(i));
                 }
-                if (raiz.dere!=null) {
-                    for (int i = 0; i < raiz.dere.ultimos.size(); i++) {
-                        raiz.ultimos.add(raiz.dere.ultimos.get(i));
-                    }
+               
+                for (int i = 0; i < raiz.dere.ultimos.size(); i++) {
+                    raiz.ultimos.add(raiz.dere.ultimos.get(i));
                 }
                 
+                
             }else{
-                for (int i = 0; i < raiz.izq.ultimos.size(); i++) {
-                    raiz.ultimos.add(raiz.izq.ultimos.get(i));
+                for (int i = 0; i < raiz.dere.ultimos.size(); i++) {
+                    raiz.ultimos.add(raiz.dere.ultimos.get(i));
                 }
             }
         }
@@ -206,12 +206,15 @@ public class Arbol {
         if(raiz.identificador.equals(".")){
             //ultimos de c1 sus siguientes son los primeros de c2
             for(int i=0;i<raiz.izq.ultimos.size();i++){
-                for(int i2=0;i2<raiz.dere.primeros.size();i2++){
-                    //posicion del valor
-                    int valor=raiz.izq.ultimos.get(i);
-                    valor--;
-                    siguientes.get(valor).setValor(raiz.dere.primeros.get(i2));
+                if (raiz.dere!=null) {
+                    for(int i2=0;i2<raiz.dere.primeros.size();i2++){
+                        //posicion del valor
+                        int valor=raiz.izq.ultimos.get(i);
+                        valor--;
+                        siguientes.get(valor).setValor(raiz.dere.primeros.get(i2));
+                    }
                 }
+                
             }
         }
         if(raiz.identificador.equals("+") || raiz.identificador.equals("*")){
@@ -228,11 +231,13 @@ public class Arbol {
     public void insertarToken(String dato){
         tokens.add(dato);
     }
-    public void analizando(String nombre) {
+    public void analizando(String nombre) throws IOException {
         this.raiz=new NodoArbol(0,".");
         this.raiz.dere=new NodoArbol(1,"#");
         this.raiz.izq=new NodoArbol(2,tokens.get(0));
-        for(int i=0;i<tokens.size();i++){
+        //insertar(false,this.raiz,new NodoArbol(0,"."));
+        //insertar(false,this.raiz,new NodoArbol(1,"#"));
+        for(int i=1;i<tokens.size();i++){
             NodoArbol nuevo= new NodoArbol(i+3,tokens.get(i));
             insertar(false,this.raiz,nuevo);
         }
@@ -240,19 +245,152 @@ public class Arbol {
         primeros(this.raiz);
         cantidadNodos=1;
         ultimos(this.raiz);
-        //listaSiguientes(this.raiz);
-        //Collections.sort(nodoHijos);
-        //tablaEstados();
+        listaSiguientes(this.raiz);
+        Collections.sort(nodoHijos);
+        tablaEstados();
         cantidadNodos=1;
         generarReportes(nombre);
         
     }
-    public void generarReportes(String nombre) {
+    public void generarReportes(String nombre) throws IOException {
         graficarArbol(nombre);
+        graficarSiguientes(nombre);
+        graficarEstados(nombre);
+        AFD(nombre);
+    }
+    public void AFD(String nombre) throws IOException{
+        //String Nombre=NOMBRE_EXPRESIONREGULAR;
+        String ruta = "AFD"+nombre+".dot";
+        File archivo = new File(ruta);
+        BufferedWriter Lect;
+        Lect = new BufferedWriter(new FileWriter(archivo));
+        this.cadenaImprimir = "digraph AFD { " + '\n';
+        this.cadenaImprimir+="graph [label=\"AFD: "+nombre+"\", labelloc=t, fontsize=20]; ";
+        AFDDot();
+        this.cadenaImprimir += '\n' + "}";
+        
+        
+        Lect.write(this.cadenaImprimir);
+        Lect.close();
+        try {
+            String fileInputPath=ruta;
+                String fileOutPath="AFD"+nombre+".png";
+                String tParam="-Tpng";
+                String toParam="-o";
+                
+                String[] cmd=new String[5];
+                cmd[0]=Manejador.obtenerInstancia().getDotPath();
+                cmd[1]=tParam;
+                cmd[2]=fileInputPath;
+                cmd[3]=toParam;
+                cmd[4]=fileOutPath;
+                //String cm = "dot "+tParam+" "+fileInputPath+" "+toParam+" "+fileOutPath;
+                Runtime rt = Runtime.getRuntime();
+                rt.exec(cmd);
+            
+            
+            
+            //String cmd = "dot -Tpng AFD"+Cantidad+".dot -o AFD"+Cantidad+".png"; 
+            //Runtime.getRuntime().exec(cmd); 
+            
+        }catch (IOException ioe) {
+            //en caso de error
+            System.out.println (ioe);
+        }
         
     }
+    public void AFDDot(){
+        cadenaImprimir+="rankdir=LR;";
+        cadenaImprimir+="edge [color=blue];";
+        cadenaImprimir+="node [color = mediumseagreen];";
+        for(int i=0;i<transiciones.size();i++){
+            cadenaImprimir+="\""+transiciones.get(i).getNombreEstado()+"\""+"[ label="+transiciones.get(i).getNombreEstado()+"]"+'\n';
+        }
+        cadenaImprimir+="secret_node [style=invis];\n";
+        cadenaImprimir+="secret_node -> S0 [label=\"inicio\"];";
+        //agregamos estado de finalizacion
+        for(int z=0;z<transiciones.size();z++){
+            for(int z2=0;z2<transiciones.get(z).idEstado.size();z2++){
+                //System.out.println("FINAL---- "+maximo);
+                if(transiciones.get(z).idEstado.get(z2)==max){
+                    //System.out.println("Valido"+z);
+                    cadenaImprimir+=transiciones.get(z).getNombreEstado()+"[peripheries=2];\n";
+                }
+            }
+        }
+        //creacion de transicions 
+       for(int x=0;x<transiciones.size();x++){
+           //recorro hacia abajo en los estados
+            for(int y=0;y<nodoHijos.size();y++){
+                //recorro hacia la derecha
+                
+                if(tabla[x+1][y+1]==null){
+                    //no hay estado de transicion
+                }else{
+                    //quitar errore de graphviz
+                    String Escape="";
+                    //validaciones para quitar errores de graphviz
+                    String tem=tabla[0][y+1].replaceAll("\"", "");
+                    String tem2="";
+                    for(int i=0;i<tem.length();i++){
+                        if(tem.charAt(i)==(char)123    ||tem.charAt(i)==(char)125){
+                        }else{tem2+=tem.charAt(i);}
+                    }
+                    Escape="";
+                    for(int i=0;i<tem2.length();i++){
+                        if(Character.isDigit(tem2.charAt(i)) ||Character.isLetter(tem2.charAt(i)) ||tem2.charAt(i)==(char)32){
+                        }else{
+                            Escape="\\";
+                            break;
+                        }
+                    }
+                    cadenaImprimir+="\""+transiciones.get(x).getNombreEstado()+"\""+"->\""+tabla[x+1][y+1]+"\""+"[label=\""+Escape+tem2+"\"];"+'\n';
+                }
+                
+            }
+       }
+    }
+    public void graficarEstados(String nombre){
+        //String Nombre=NOMBRE_EXPRESIONREGULAR;
+        
+        String CadenaImprimir="<html>"+ "<body>"+ "<h1 align='center'> Tabla Transiciones: "+nombre+"</h1></br>"+ "<table cellpadding='10' border = '1' align='center'>"+'\n';
+        //Escribimos titulos
+        CadenaImprimir+=" <tr><td><b>Estado</b></td><td><b>Terminales</b></td></tr>"+'\n';
+        //imprimimos 
+
+        for(int x2=0;x2<cantEstados+1;x2++){
+            CadenaImprimir+="<tr>";
+            for(int x=0;x<nodoHijos.size()+1;x++){
+                if(tabla[x2][x]==null){
+                    CadenaImprimir+="<td><b></b></td>";
+                }else{
+                    CadenaImprimir+="<td><b>"+tabla[x2][x]+"</b></td>";
+                }
+                
+            }
+            CadenaImprimir+="</tr>"+'\n';
+
+            
+        }
+
+        CadenaImprimir+="</table></body></html>";
+        
+        String ruta = "Transiciones"+nombre+".html";
+        File archivo = new File(ruta);
+        try {
+            if (!archivo.exists()) {
+                archivo.createNewFile();
+            }
+            FileWriter Fw = new FileWriter(archivo);
+            BufferedWriter Bw = new BufferedWriter(Fw);
+            Bw.write(CadenaImprimir);
+            Bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void graficarArbol(String nombre) {
-        String ruta = nombre+".dot";
+        String ruta = "Arbol"+nombre+".dot";
         File archivo = new File(ruta);
         BufferedWriter Lect=null;
         FileWriter fw;
@@ -273,7 +411,7 @@ public class Arbol {
             //Lect.close();
             try {
                 String fileInputPath=ruta;
-                String fileOutPath=nombre+".png";
+                String fileOutPath="Arbol"+nombre+".png";
                 String tParam="-Tpng";
                 String toParam="-o";
                 
@@ -441,5 +579,41 @@ public class Arbol {
                 }
             }   
         }
+    }
+    public void graficarSiguientes(String nombre){
+        //String Nombre=NOMBRE_EXPRESIONREGULAR;
+        
+        String CadenaImprimir="<html>"+ "<body>"+ "<h1 align='center'> Tabla Siguientes: "+nombre+"</h1></br>"+ "<table cellpadding='10' border = '1' align='center'>"+'\n';
+
+        CadenaImprimir+=" <tr><td><b>Nombre de Hoja</b></td><td><b>Id de Hoja</b></td><td><b>Siguientes</b></td></tr>"+'\n';
+        for(int i=0;i<siguientes.size();i++){
+            //concatenacion de siguientes
+            String sig="";
+            for(int x=0;x<siguientes.get(i).siguientes.size();x++){
+                if(x==0){
+                    sig+=siguientes.get(i).siguientes.get(x);
+                }else{
+                    sig+=","+siguientes.get(i).siguientes.get(x);
+                }
+            }
+            CadenaImprimir+="<tr><td>"+siguientes.get(i).getNombreNodo()+"</td>"+"<td>"+siguientes.get(i).getNumeroNodo()+"</td>"+"<td>"+sig+"</tr>"+'\n';
+        }
+
+        CadenaImprimir+="</table></body></html>";
+        
+        String ruta = "Siguientes"+nombre+".html";
+        File archivo = new File(ruta);
+        try {
+            if (!archivo.exists()) {
+                archivo.createNewFile();
+            }
+            FileWriter Fw = new FileWriter(archivo);
+            BufferedWriter Bw = new BufferedWriter(Fw);
+            Bw.write(CadenaImprimir);
+            Bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
     }
 }
