@@ -301,7 +301,7 @@ public class Principal extends javax.swing.JFrame {
                 System.out.println("Causa: "+ex.getCause());
             }
             try {
-                Manejador.obtenerInstancia().proceso();
+                Manejador.obtenerInstancia().procesoArbol();
             } catch (IOException ex) {
                 Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
             }

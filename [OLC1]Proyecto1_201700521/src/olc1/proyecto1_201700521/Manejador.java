@@ -127,7 +127,7 @@ public class Manejador {
         evaluaciones= new ArrayList<>();
         dotPath="D:\\Graphviz\\bin\\dot.exe";
     }
-    public void proceso() throws IOException{
+    public void procesoArbol() throws IOException{
         
         for (Almacenador expresion:expresiones) {
             String exp= (String)expresion.valor;
