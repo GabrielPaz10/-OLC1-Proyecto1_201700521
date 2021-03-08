@@ -67,11 +67,12 @@ conjuntos ::=
  | conjunto:a                   {:RESULT=new ArrayList(); RESULT.add(a);:}
 ; 
 
-expresiones ::= 
+expresiones ::=
    expresiones:a expresion:b    {:RESULT=a; RESULT.add(b);:}
  | expresion:a                  {:RESULT=new ArrayList(); RESULT.add(a);:}
 ; 
-
+expresion ::= ID:a MENOS MAYOR e:e PTCOMA    {:RESULT = new Almacenador(a,e);:}
+;
 evaluaciones ::= 
    evaluaciones:a evaluacion:b  {:RESULT=a; RESULT.add(b);:}
  | evaluacion:a                 {:RESULT=new ArrayList(); RESULT.add(a);:}

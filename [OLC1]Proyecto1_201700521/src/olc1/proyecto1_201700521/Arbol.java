@@ -301,8 +301,8 @@ public class Arbol {
     }
     public void AFDDot(){
         cadenaImprimir+="rankdir=LR;";
-        cadenaImprimir+="edge [color=black];";
-        cadenaImprimir+="node [color = orange];";
+        cadenaImprimir+="edge [color=red];";
+        cadenaImprimir+="node [color = orange,style=filled];";
         for(int i=0;i<transiciones.size();i++){
             cadenaImprimir+="\""+transiciones.get(i).getNombreEstado()+"\""+"[ label="+transiciones.get(i).getNombreEstado()+"]"+'\n';
         }

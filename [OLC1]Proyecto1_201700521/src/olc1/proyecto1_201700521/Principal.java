@@ -138,7 +138,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(65, 65, 65)
                         .addComponent(btnAnalizar)))
-                .addContainerGap(351, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,22 +280,10 @@ public class Principal extends javax.swing.JFrame {
                 Manejador.obtenerInstancia().setConjuntos(parse.info.get(0));
                 Manejador.obtenerInstancia().setExpresiones(parse.info.get(1));
                 Manejador.obtenerInstancia().setEvaluaciones(parse.info.get(2));
-                
                 System.out.println("si funciona");
-                //
-                System.out.println("si funciona");
-                /*for(ArrayList dato: Manejador.obtenerInstancia().getParse().info){
-                    System.out.println(dato.getClass());
-                    System.out.println(dato.size());*/
                     for(Almacenador s: Manejador.obtenerInstancia().getExpresiones()){
-                        //System.out.println(s.getClass());
-                        //Almacenador nue= (Almacenador)s;
                         System.out.println(s.toString());
                     }
-                    //Manejador.obtenerInstancia().proceso();
-                    /*Manejador.obtenerInstancia().proceso();
-                }*/
-                
             } catch (Exception ex) {
                 System.out.println("Error fatal en compilación de entrada.");
                 System.out.println("Causa: "+ex.getCause());

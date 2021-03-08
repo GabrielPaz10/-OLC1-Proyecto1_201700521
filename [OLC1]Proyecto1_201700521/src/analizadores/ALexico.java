@@ -5,6 +5,8 @@
 */
 package analizadores;
 import java_cup.runtime.Symbol; 
+import olc1.proyecto1_201700521.ErrorLS;
+import olc1.proyecto1_201700521.Manejador;
 
 
 /**

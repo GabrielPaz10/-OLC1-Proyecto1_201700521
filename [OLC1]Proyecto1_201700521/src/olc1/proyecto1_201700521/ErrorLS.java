@@ -9,14 +9,14 @@ package olc1.proyecto1_201700521;
  *
  * @author GabrielPaz
  */
-public class Error {
+public class ErrorLS {
     
     private String tipo;
     private String descripcion;
     private int linea;
     private int columna;
 
-    public Error(String tipo, String descripcion, int linea, int columna) {
+    public ErrorLS(String tipo, String descripcion, int linea, int columna) {
         
         this.tipo = tipo;
         this.descripcion = descripcion;

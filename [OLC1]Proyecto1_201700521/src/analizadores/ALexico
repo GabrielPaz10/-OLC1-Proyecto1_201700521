@@ -3,6 +3,8 @@
 */
 package analizadores;
 import java_cup.runtime.Symbol; 
+import olc1.proyecto1_201700521.ErrorLS;
+import olc1.proyecto1_201700521.Manejador;
 
 %%
 %class ALexico
@@ -65,5 +67,5 @@ CADENA = [\"]([^\"\n])*[\"]
 
     \n {yychar=1;}
 
-    . { System.out.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);Manejador.obtenerInstancia().getError().add("Lexico","El caracter "+yytext()+" no pertenece al lenguaje",yyline,yychar);}
+    . { }
 }

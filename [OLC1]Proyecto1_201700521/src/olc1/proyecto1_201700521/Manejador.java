@@ -53,7 +53,7 @@ public class Manejador {
     public void setConjuntos(ArrayList<Almacenador> conjuntos) {
         this.conjuntos = conjuntos;
     }
-    private ArrayList<Error> errores;
+    private ArrayList<ErrorLS> errores;
     private String rutaArbol;
     private String rutaAFD;
     private String rutaAFN;
@@ -68,11 +68,11 @@ public class Manejador {
     }
     
 
-    public ArrayList<Error> getErrores() {
+    public ArrayList<ErrorLS> getErrores() {
         return errores;
     }
 
-    public void setErrores(ArrayList<Error> errores) {
+    public void setErrores(ArrayList<ErrorLS> errores) {
         this.errores = errores;
     }
 
